@@ -27,9 +27,9 @@ io.on('connection', (socket) => {
         io.to(room).emit("receive_msg", data);
     });
 
-    socket.on("reset_game", (data) => {
+    socket.on("send_resetRequest", (data) => {
         const { room: receivedRoom } = data;
-        io.to(receivedRoom).emit("game_reset");
+        io.to(receivedRoom).emit("receive_resetRequest");
     });
 
     socket.on("send_data", ({ myTurn, room, index, }) => {
