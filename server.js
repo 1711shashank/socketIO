@@ -9,16 +9,16 @@ const port = 3001;
 
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:19006",
+        origin: ["http://192.168.184.1:19006","http://192.168.184.59:19006"]
     }
 });
 
 io.on('connection', (socket) => {
     console.log(`a user connected: ${socket.id}`);
 
-    socket.on("join room", ({ playerId, room }) => {
-        socket.join(room); // Join the room
-        console.log(`${playerId} joined room: ${room}`);
+    socket.on("join room", ({ room }) => {
+        socket.join(room);
+        console.log(`joined room: ${room}`);
     });
 
     socket.on("send_msg", ({ room, user, message }) => {
@@ -32,7 +32,7 @@ io.on('connection', (socket) => {
         io.to(receivedRoom).emit("receive_resetRequest");
     });
 
-    socket.on("send_data", ({ myTurn, room, index, }) => {
+    socket.on("send_data", ({ myTurn, room, index }) => {
         const data = { myTurn, index };
         console.log(data);
         io.to(room).emit("receive_data", data);
