@@ -16,9 +16,9 @@ const io = new Server(server, {
 io.on('connection', (socket) => {
     console.log(`a user connected: ${socket.id}`);
 
-    socket.on("join room", ({ myTurn, roomInput }) => {
-        socket.join(roomInput); // Join the room
-        console.log(`${myTurn} joined room: ${roomInput}`);
+    socket.on("join room", ({ playerId, room }) => {
+        socket.join(room); // Join the room
+        console.log(`${playerId} joined room: ${room}`);
     });
 
     socket.on("send_msg", ({ room, user, message }) => {
@@ -28,14 +28,14 @@ io.on('connection', (socket) => {
     });
 
     socket.on("reset_game", (data) => {
-        const { roomInput: receivedRoomInput } = data;
-        io.to(receivedRoomInput).emit("game_reset");
+        const { room: receivedRoom } = data;
+        io.to(receivedRoom).emit("game_reset");
     });
 
-    socket.on("send_data", ({ myTurn, roomInput, index, }) => {
+    socket.on("send_data", ({ myTurn, room, index, }) => {
         const data = { myTurn, index };
         console.log(data);
-        io.to(roomInput).emit("receive_data", data);
+        io.to(room).emit("receive_data", data);
     });
 });
 
